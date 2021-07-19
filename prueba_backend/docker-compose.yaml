@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MARIADB_DATABASE: xzy
+      MARIADB_USER: usuarioPrueba
+      MARIADB_PASSWORD: contrasenaPrueba
+    volumes:
+      - mariadb:/var/lib/mysql
+  node:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    depends_on:
+      - db
+volumes:
+  mariadb:
