@@ -1,9 +1,12 @@
 const Product = require("../models/productos");
 const { Op } = require("sequelize");
+const ProductSurvie = require("../models/calificacionproducto");
 
 exports.getProducts = async (req, res) => {
   try {
-    let products = await Product.findAll();
+    let products = await Product.findAll({
+      include: ProductSurvie,
+    });
 
     if (products.length) {
       res.status(200).json({
@@ -32,6 +35,7 @@ exports.getProductByID = async (req, res) => {
       where: {
         id,
       },
+      include: ProductSurvie,
     });
 
     if (products) {
@@ -169,6 +173,48 @@ exports.getStockProduct = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       msg: "Ocurrio un error al Actualizar el producto",
+      code: 500,
+    });
+  }
+};
+
+exports.createSurvieProduct = async (req, res) => {
+  let { id, idCustomer } = req.params;
+
+  let { Survie } = req.body;
+
+  try {
+    await ProductSurvie.create({
+      ProductID: id,
+      CustomerID: idCustomer,
+      Survie,
+    });
+
+    res.status(201).json({
+      msg: "Survie Created",
+      code: 201,
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: error,
+      code: 500,
+    });
+  }
+};
+
+exports.getSurviesProduct = async (req, res) => {
+  try {
+    const survies = await ProductSurvie.findAll({
+      include: Product,
+    });
+
+    res.status(200).json({
+      msg: survies,
+      code: 200,
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: error,
       code: 500,
     });
   }

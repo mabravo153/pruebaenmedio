@@ -29,17 +29,12 @@ module.exports = Product;
 Employee.hasMany(Order, { foreignKey: "EmployeeID" });
 Customer.hasMany(Order, { foreignKey: "CustomerID" });
 
-Product.belongsToMany(Customer, {
-  through: ProductSurvie,
-  foreignKey: "ProductID",
-});
-Customer.belongsToMany(Product, {
-  through: ProductSurvie,
-  foreignKey: "CustomerID",
-});
+Product.hasMany(ProductSurvie, { foreignKey: "ProductID" });
+Customer.hasMany(ProductSurvie, { foreignKey: "CustomerID" });
 
 Product.hasMany(OrderDetail, { foreignKey: "ProductID" });
 Order.hasMany(OrderDetail, { foreignKey: "OrderID" });
 OrderDetail.belongsTo(Order);
 Order.belongsTo(Employee);
 Order.belongsTo(Customer);
+ProductSurvie.belongsTo(Product);
